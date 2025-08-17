@@ -2,18 +2,18 @@ import type { Todo } from "../types/Todo";
 
 type Props = {
   todo: Todo;
-  todoUpdateText: string;
-  updateTodo: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeCheckbox: (todoText: string) => void;
-  changeEdit: (todoText: string) => void;
-  updateTodoName: (todoText: string, newTodo: string) => void;
+  editingItems: { [id: number]: string };
+  updateTodo: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
+  changeCheckbox: (id: number) => void;
+  changeEdit: (id: number) => void;
+  updateTodoName: (id: number, newTodo: string) => void;
   deleteTodo: () => void;
 };
 
 export const TodoItem = (props: Props) => {
   const {
     todo,
-    todoUpdateText,
+    editingItems,
     updateTodo,
     changeCheckbox,
     changeEdit,
@@ -28,13 +28,17 @@ export const TodoItem = (props: Props) => {
             <input
               type="checkbox"
               checked={todo.checked}
-              onChange={() => changeCheckbox(todo.text)}
+              onChange={() => changeCheckbox(todo.id)}
             />
-            <input type="text" value={todoUpdateText} onChange={updateTodo} />
+            <input
+              type="text"
+              value={editingItems[todo.id] || todo.text}
+              onChange={(e) => updateTodo(e, todo.id)}
+            />
           </div>
           <div>
             <button
-              onClick={() => updateTodoName(todo.text, todoUpdateText)}
+              onClick={() => updateTodoName(todo.id, editingItems[todo.id] || todo.text)}
               style={{ backgroundColor: "#1E90FF" }}
             >
               更新
@@ -47,14 +51,14 @@ export const TodoItem = (props: Props) => {
             <input
               type="checkbox"
               checked={todo.checked}
-              onChange={() => changeCheckbox(todo.text)}
+              onChange={() => changeCheckbox(todo.id)}
             />
             <p className={`todo-text ${todo.checked ? "line-through" : ""}`}>
               {todo.text}
             </p>
           </div>
           <div>
-            <button onClick={() => changeEdit(todo.text)}>編集</button>
+            <button onClick={() => changeEdit(todo.id)}>編集</button>
             <button onClick={deleteTodo} style={{ backgroundColor: "red" }}>
               削除
             </button>

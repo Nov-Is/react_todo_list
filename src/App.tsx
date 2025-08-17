@@ -7,45 +7,50 @@ import type { Todo } from "./components/types/Todo";
 function App() {
   const [todoText, setTodoText] = useState("");
   const [todoArray, setTodoArray] = useState<Todo[]>([]);
-  const [todoUpdateText, setTodoUpdateText] = useState("");
+  const [editingItems, setEditingItems] = useState<{[id: number]: string}>({});
+  const [count, setCount] = useState<number>(0);
 
   const inputTodo = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoText(e.target.value);
   };
 
-  const updateTodo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTodoUpdateText(e.target.value);
+  const updateTodo = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    setEditingItems({...editingItems, [id]:e.target.value});
   };
 
-  const onClickSaveTodo = (todo: string) => {
+  const onClickSaveTodo = () => {
     const newTodo = {
-      text: todo,
+      id: count,
+      text: todoText,
       checked: false,
       isEditing: false,
     };
 
+    setCount(count + 1);
     setTodoArray([...todoArray, newTodo]);
     setTodoText("");
   };
 
-  const changeCheckbox = (todoText: string) => {
+  const changeCheckbox = (id: number) => {
     const handleCheckbox = todoArray.map((todo) =>
-      todo.text === todoText ? { ...todo, checked: !todo.checked } : todo
+      todo.id === id ? { ...todo, checked: !todo.checked } : todo
     );
     setTodoArray(handleCheckbox);
   };
 
-  const changeEdit = (todoText: string) => {
+  const changeEdit = (id: number) => {
     const handleEdit = todoArray.map((todo) =>
-      todo.text === todoText ? { ...todo, isEditing: !todo.isEditing } : todo
+      todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
     );
     setTodoArray(handleEdit);
-    setTodoUpdateText(todoText);
+    if (!editingItems[id]) {
+      setEditingItems({...editingItems, [id]: todoText})
+    }
   };
 
-  const updateTodoName = (todoText: string, newTodo: string) => {
+  const updateTodoName = (id: number, newTodo: string) => {
     const editedTodoList = todoArray.map((todo) =>
-      todo.text === todoText
+      todo.id === id
         ? { ...todo, text: newTodo, isEditing: false }
         : todo
     );
@@ -54,11 +59,10 @@ function App() {
 
   const deleteTodo = (index: number) => {
     const confirm = window.confirm("本当に削除してもよろしいですか？");
-    if (confirm) {
-      const newTodos = [...todoArray];
-      newTodos.splice(index, 1);
-      setTodoArray(newTodos);
-    }
+    if (!confirm) return
+    const newTodos = [...todoArray];
+    newTodos.splice(index, 1);
+    setTodoArray(newTodos);
   };
 
   return (
@@ -73,7 +77,7 @@ function App() {
       />
       <TodoList
         todoArray={todoArray}
-        todoUpdateText={todoUpdateText}
+        editingItems={editingItems}
         updateTodo={updateTodo}
         changeCheckbox={changeCheckbox}
         updateTodoName={updateTodoName}

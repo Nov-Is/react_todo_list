@@ -1,7 +1,7 @@
 type AddTodo = {
   todoText: string;
   inputTodo: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClickSaveTodo: (todo: string) => void;
+  onClickSaveTodo: () => void;
 };
 
 export const AddTodo = (props: AddTodo) => {
@@ -14,7 +14,12 @@ export const AddTodo = (props: AddTodo) => {
         placeholder="todoを入力"
         onChange={inputTodo}
       />
-      <button onClick={() => onClickSaveTodo(todoText)} style={{backgroundColor: "gray"}}>保存</button>
+      <button
+        onClick={() => onClickSaveTodo()}
+        style={{ backgroundColor: "gray" }}
+      >
+        保存
+      </button>
     </div>
   );
 };

@@ -6,11 +6,18 @@ type TodoArray = {
 
 export const TodoResult = (props: TodoArray) => {
   const { todoArray } = props;
+
+  const completed = () =>
+    todoArray.filter((todo) => todo.checked === true).length;
+
+  const unCompleted = () =>
+    todoArray.filter((todo) => todo.checked === false).length;
+
+  
   return (
     <p>
-      全てのタスク: {todoArray.length} 完了済み:{" "}
-      {todoArray.filter((todo) => todo.checked === true).length} 未完了:{" "}
-      {todoArray.filter((todo) => todo.checked === false).length}
+      全てのタスク: {todoArray.length} 完了済み: {completed()} 未完了:{" "}
+      {unCompleted()}
     </p>
   );
 };

@@ -4,18 +4,18 @@ import type { Todo } from "../types/Todo";
 
 type Props = {
   todoArray: Array<Todo>;
-  todoUpdateText: string;
-  updateTodo: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeCheckbox: (todoText: string) => void;
-  updateTodoName: (todoText: string, newTodo: string) => void;
-  changeEdit: (todoText: string) => void;
+  editingItems: {[id: number]: string};
+  updateTodo: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
+  changeCheckbox: (id: number) => void;
+  updateTodoName: (id: number, newTodo: string) => void;
+  changeEdit: (id: number) => void;
   deleteTodo: (index: number) => void;
 };
 
 export const TodoList = (props: Props) => {
   const {
     todoArray,
-    todoUpdateText,
+    editingItems,
     updateTodo,
     changeCheckbox,
     updateTodoName,
@@ -29,7 +29,7 @@ export const TodoList = (props: Props) => {
         {todoArray.map((todo, index) => (
           <TodoItem
             todo={todo}
-            todoUpdateText={todoUpdateText}
+            editingItems={editingItems}
             updateTodo={updateTodo}
             changeCheckbox={changeCheckbox}
             changeEdit={changeEdit}
